@@ -10,20 +10,7 @@ cd(root);
 p = project_parameters();
 resistance = [p.R, 2*sqrt(p.L/p.C), 3.2*sqrt(p.L/p.C)];
 names = {'Underdamped', 'Critically damped', 'Overdamped'};
-probeTime = (0:p.sampleTime:0.04).';
-settling = zeros(1, 3);
-for k = 1:3
-    trial = p;
-    trial.R = resistance(k);
-    response = circuit_response(probeTime, trial);
-    after = find(probeTime >= p.disturbanceTime);
-    tolerance = 0.02*abs(p.disturbanceVoltage);
-    last = find(abs(response(after, 2) - ...
-        p.sourceVoltage - p.disturbanceVoltage) > tolerance, 1, 'last');
-    assert(~isempty(last) && last < numel(after), 'Sizing response did not settle.');
-    settling(k) = probeTime(after(last + 1)) - p.disturbanceTime;
-end
-p.stopTime = ceil((p.disturbanceTime + 1.2*max(settling))/p.sampleTime)*p.sampleTime;
+[p,timing] = plan_experiment(p,resistance);
 t = (0:p.sampleTime:p.stopTime).';
 response = cell(1, 3);
 maxError = zeros(1, 3);
@@ -45,7 +32,7 @@ for k = 1:3
         response{k}(:, 4) - response{k}(:, 5);
     assert(max(abs(residual)) < 1e-8, 'Kirchhoff voltage balance failed.');
     assert(abs(response{k}(end, 2) - p.sourceVoltage - ...
-        p.disturbanceVoltage) < 0.02*p.disturbanceVoltage, 'Response not settled.');
+        p.secondStepVoltage) < 0.02*p.secondStepVoltage, 'Response not settled.');
 end
 frequency = logspace(1, 5, 700).';
 s = 1i*2*pi*frequency;
@@ -55,7 +42,8 @@ assert(max(abs(sum(gain, 2) - 1)) < 1e-12, 'Frequency-domain voltage balance fai
 report.natural_frequency_Hz = 1/(2*pi*sqrt(p.L*p.C));
 report.damping_ratios = resistance/2*sqrt(p.C/p.L);
 report.resistance_ohm = resistance;
-report.post_disturbance_settling_s = settling;
+report.post_second_step_settling_s = timing.post_event_settling_s;
+report.second_source_step_at_s = p.secondStepTime;
 report.closed_form_max_error_V = maxError;
 report.stop_time_s = p.stopTime;
 report.verification = 'PASS';
@@ -71,6 +59,7 @@ writetable(array2table([frequency, 20*log10(abs(gain))], 'VariableNames', ...
     {'frequency_Hz','lowpass_dB','bandpass_dB','highpass_dB'}), 'results/frequency.csv');
 write_json('results/metrics.json', report);
 write_json('results/parameters.json', p);
+write_json('results/timing.json',timing);
 plot_results(t, response, frequency, gain, names, p, showFigures);
 disp(report);
 end

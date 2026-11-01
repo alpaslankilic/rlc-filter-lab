@@ -1,0 +1,21 @@
+{
+  "initial_settled_at_s": [
+    0.0066079999999999993,
+    0.0031179999999999997,
+    0.00483
+  ],
+  "second_source_step_at_s": 0.0066099999999999996,
+  "final_settled_at_s": [
+    0.012248,
+    0.008728,
+    0.010438
+  ],
+  "post_event_settling_s": [
+    0.0056380000000000006,
+    0.002118,
+    0.003828
+  ],
+  "stop_time_s": 0.012811999999999999,
+  "tail_fraction": 0.1,
+  "criteria": "2% input-step amplitude for capacitor voltage; 2% transient peak for current and R/L voltages"
+}

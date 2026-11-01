@@ -14,16 +14,17 @@ figure windows. Edit `project_parameters.m` to change component values.
 
 ![Damping comparison](results/01_damping_comparison.png)
 
-**Figure 1. Damping and source disturbance.** A 5 V source step occurs at 1 ms,
-followed by a marked +0.75 V disturbance at 9 ms. Underdamped, critically damped,
-and overdamped circuits all settle at 5.75 V. The 15.232 ms endpoint includes
-20% headroom after the slowest post-disturbance capacitor settling time.
+**Figure 1. Two source-input steps.** The source rises to 5 V at 1 ms.
+After all three circuit cases have settled, it rises by another 0.75 V at
+6.610 ms. This is a second source-input step, not a separately applied
+disturbance. All cases settle at 5.75 V before the 12.812 ms endpoint.
 
 ![Circuit current and component voltages](results/02_circuit_dynamics.png)
 
 **Figure 2. Electrical transients.** The nominal 12 ohm circuit carries a continuous
 inductor current while resistor and inductor voltages ring after each source
 change. Their sum with the capacitor voltage equals the instantaneous source.
+The two source-step markers use the same times as Figure 1.
 
 ![Filter magnitude responses](results/03_filter_response.png)
 
@@ -35,6 +36,12 @@ in Figures 1 and 2.
 PNG previews, vector PDFs, CSV data and measured metrics are in `results/`.
 The current release covers the continuous series-RLC lab; no digital-filter or
 ADC anti-aliasing implementation is included.
+
+Event times are derived rather than chosen: the slowest initial response settles
+at 6.608 ms, so the second step is one 2-microsecond sample later. The final
+response settles at 12.248 ms; 10% of its recovery duration is added as a short
+tail. The criterion includes current and all component voltages.
+`results/timing.json` records every case and the normalized 2% criteria.
 
 ## Equations and checks
 

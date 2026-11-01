@@ -2,7 +2,7 @@ function signal = circuit_response(t, p)
 %CIRCUIT_RESPONSE Closed-form response, including both source-voltage steps.
 signal = zeros(numel(t), 5);
 events = [p.sourceTime, p.sourceVoltage; ...
-    p.disturbanceTime, p.disturbanceVoltage];
+    p.secondStepTime, p.secondStepVoltage];
 wn = 1/sqrt(p.L*p.C);
 alpha = p.R/(2*p.L);
 for k = 1:size(events, 1)
