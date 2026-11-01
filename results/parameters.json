@@ -1,0 +1,11 @@
+{
+  "R": 12,
+  "L": 0.008,
+  "C": 1.2E-5,
+  "sourceVoltage": 5,
+  "sourceTime": 0.001,
+  "disturbanceVoltage": 0.75,
+  "disturbanceTime": 0.009,
+  "sampleTime": 2E-6,
+  "stopTime": 0.015231999999999999
+}
