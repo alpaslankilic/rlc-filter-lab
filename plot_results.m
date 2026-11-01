@@ -10,7 +10,7 @@ for k = 1:3
 end
 plot(ax, 1e3*t, response{1}(:, 5), ':', 'Color', [.4 .4 .4], ...
     'LineWidth', 1.3, 'DisplayName', 'Source voltage');
-events(ax, p);
+events(ax, p, false);
 ylabel(ax, 'Capacitor voltage [V]');
 xlabel(ax, 'Time [ms]');
 legend(ax, 'Location', 'northoutside', 'Orientation', 'horizontal', 'Box', 'off');
@@ -21,14 +21,14 @@ save_figure(fig, '01_damping_comparison', visible);
 [fig, layout] = new_figure('Circuit dynamics', 2, visible);
 ax = nexttile(layout);
 plot(ax, 1e3*t, 1e3*response{1}(:, 1), 'Color', colors(1, :), 'LineWidth', 1.8);
-events(ax, p);
+events(ax, p, true);
 ylabel(ax, 'Series current [mA]');
 title(ax, '(a) Inductor current remains continuous', 'FontWeight', 'normal');
 xlim(ax, [0, 1e3*p.stopTime]);
 style(ax);
 ax = nexttile(layout);
 plot(ax, 1e3*t, response{1}(:, 3:4), 'LineWidth', 1.6);
-events(ax, p);
+events(ax, p, true);
 ylabel(ax, 'Component voltage [V]');
 xlabel(ax, 'Time [ms]');
 title(ax, '(b) Resistor and inductor transients', 'FontWeight', 'normal');
@@ -58,14 +58,16 @@ style(ax);
 save_figure(fig, '03_filter_response', visible);
 end
 
-function events(ax, p)
+function events(ax, p, showSecondStep)
 limits = ylim(ax);
 ylim(ax,[limits(1),limits(2)+0.15*diff(limits)]);
 xline(ax, 1e3*p.sourceTime, ':', 'Source step', 'Color', [.4 .4 .4], ...
     'LabelOrientation', 'horizontal', 'FontSize', 10, 'HandleVisibility', 'off');
-xline(ax, 1e3*p.secondStepTime, '--', sprintf('Second source step (+%.2f V)',p.secondStepVoltage), ...
-    'Color', [.45 .2 .55], 'LabelOrientation', 'horizontal', ...
-    'FontSize', 10, 'HandleVisibility', 'off');
+if showSecondStep
+    xline(ax, 1e3*p.secondStepTime, '--', sprintf('Second source step (+%.2f V)',p.secondStepVoltage), ...
+        'Color', [.45 .2 .55], 'LabelOrientation', 'horizontal', ...
+        'FontSize', 10, 'HandleVisibility', 'off');
+end
 end
 
 function [fig, layout] = new_figure(name, panels, visible)

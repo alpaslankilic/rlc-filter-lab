@@ -52,7 +52,4 @@ the simulated capacitor voltage against a closed-form solution, Kirchhoff's
 voltage law in both domains, and final settling. It requires no Control System
 Toolbox. The model is an ideal lumped circuit without component tolerances.
 
-Topic: **P02** in Muhammad Mudassir Shakeel's
-[*MATLAB, Simulink & Simscape Project-Based Masterbook*](https://buymeacoffee.com/engrprogrammer).
-Code, model and figures are independently developed; the book's code and paid
-files are not redistributed. Original repository content: [MIT License](LICENSE).
+Code, model and figures are available under the [MIT License](LICENSE).
